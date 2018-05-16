@@ -5,13 +5,10 @@ import { OptionalT } from 'type-ops';
 import {
   ClassDecoratorT,
   IConstructor,
+  PropertyDecorator,
 } from './common';
 
-export interface IDataPropertyAttributes {
-  configurable?: boolean;
-  enumerable?: boolean;
-  writable?: boolean;
-}
+export type IDataPropertyAttributes = Pick<PropertyDescriptor, 'configurable' | 'enumerable' | 'writable'>;
 
 interface _IDataPropertyAttributesMetadata {
   key: PropertyKey;
@@ -23,26 +20,27 @@ const _METADATA_KEY: symbol = Symbol.for('ts-decorators.configureDataProperty');
 const _setAttributes = (target: object, propertyAttributesMetadata: _IDataPropertyAttributesMetadata): void => {
     const oldAttributes: OptionalT<PropertyDescriptor> =
       Object.getOwnPropertyDescriptor(target, propertyAttributesMetadata.key);
-    const { configurable, enumerable, writable }: IDataPropertyAttributes =
-      (oldAttributes !== undefined) ? oldAttributes : { };
+    const { configurable, enumerable, writable }: IDataPropertyAttributes = (oldAttributes !== undefined)
+        ? oldAttributes
+        : { };
     const newAttributes: PropertyDescriptor = {
         configurable,
         enumerable,
         writable,
         ...propertyAttributesMetadata.attributes,
-    };
+      };
     Object.defineProperty(target, propertyAttributesMetadata.key, newAttributes);
   };
 
 export const configureDataProperties: ClassDecoratorT<object> =
-  <TCtor extends IConstructor<object>>(ctor: TCtor): TCtor => {
-    const { name, prototype }: { name: string; prototype: object; } = ctor;
+  <TConstructor extends IConstructor<object>>(constructor: TConstructor): TConstructor => {
+    const { name, prototype }: { name: string; prototype: object; } = constructor;
     if (!Reflect.hasOwnMetadata(_METADATA_KEY, prototype)) {
-      return ctor;
+      return constructor;
     }
 
-    const extended: { [propertyKey: string]: TCtor; } = {
-        [name]: class extends ctor {
+    const extended: { [propertyKey: string]: TConstructor; } = {
+        [name]: class extends constructor {
           public constructor(...args: any[]) {
             super(...args);
             const metadata: _IDataPropertyAttributesMetadata[] = Reflect.getOwnMetadata(_METADATA_KEY, prototype);
@@ -67,8 +65,7 @@ export const configureDataProperty: ConfigureDataPropertyDecoratorFactory =
           };
         const oldPropertyAttributesMetadata: OptionalT<_IDataPropertyAttributesMetadata[]> =
           Reflect.getOwnMetadata(_METADATA_KEY, target);
-        const newMetadata: _IDataPropertyAttributesMetadata[] =
-          (oldPropertyAttributesMetadata !== undefined)
+        const newMetadata: _IDataPropertyAttributesMetadata[] = (oldPropertyAttributesMetadata !== undefined)
             ? [...oldPropertyAttributesMetadata, newPropertyAttributesMetadata]
             : [newPropertyAttributesMetadata];
         Reflect.defineMetadata(_METADATA_KEY, newMetadata, target);
