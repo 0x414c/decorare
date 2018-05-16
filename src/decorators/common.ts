@@ -1,9 +1,7 @@
 export type PropertyKey = string | symbol;
 
-export interface IConstructor<Type> extends Function {
-  new(...args: any[]): Type;
-}
+export type IConstructor<Type> = new(...args: any[]) => Type;
 
-export type ClassDecoratorT<Type> = <Ctor extends IConstructor<Type>>(ctor: Ctor) => Ctor;
+export type ClassDecoratorT<Type> = <Constructor extends IConstructor<Type>>(constructor: Constructor) => Constructor;
 
-export type PropertyDecorator = (target: object, ownPropertyKey: PropertyKey) => void;
+export type PropertyDecorator = (target: object, propertyKey: PropertyKey) => void;
