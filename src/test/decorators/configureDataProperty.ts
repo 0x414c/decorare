@@ -41,6 +41,8 @@ test('configureDataProperty', t => {
   const x = new Foo();
   (x as any)._p3 = '_p3';
 
+  t.is(Foo.name, 'Foo');
+
   t.deepEqual(
     Object.getOwnPropertyDescriptor(x, 'p1'),
     { configurable: true, enumerable: true, writable: false, value: 'p1' },
