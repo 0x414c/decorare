@@ -1,5 +1,5 @@
 export {
-  IConstructor,
+  ConstructorT,
   PropertyDecorator,
   PropertyKey,
   ClassDecoratorT,
@@ -10,4 +10,6 @@ export {
   configureDataProperties,
   ConfigureDataPropertyDecoratorFactory,
   IDataPropertyAttributes,
-} from './decorators/configureDataProperty';
+} from './decorators/configureDataProperty/configureDataProperty';
+
+export { PropertyConfigurationError } from './decorators/configureDataProperty/PropertyConfigurationError';
