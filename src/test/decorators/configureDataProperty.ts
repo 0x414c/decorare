@@ -16,17 +16,23 @@ class Foo {
 
   @configureDataProperty({ configurable: true, enumerable: false, writable: true })
   private _p3!: string;
-}
+
+  @configureDataProperty({ configurable: false, enumerable: false, writable: true })
+  public p4 = Symbol.for('p4');
+};
 
 @configureDataProperties
 class Bar extends Foo {
-  @configureDataProperty({ configurable: true, enumerable: true, writable: true })
+  @configureDataProperty({ configurable: true, enumerable: false, writable: false })
   public p2 = '1';
+
+  @configureDataProperty({ configurable: true, enumerable: true, writable: false })
+  public p4 = Symbol.for('4');
 
   public constructor() {
     super();
   };
-}
+};
 
 @configureDataProperties
 class Baz extends Foo {
@@ -36,7 +42,7 @@ class Baz extends Foo {
   public constructor() {
     super();
   };
-}
+};
 
 test('configureDataProperty', t => {
   const x = new Foo();
@@ -54,12 +60,16 @@ test('configureDataProperty', t => {
     Object.getOwnPropertyDescriptor(x, '_p3'),
     { configurable: true, enumerable: false, writable: true, value: '_p3' },
   );
+  t.deepEqual(
+    Object.getOwnPropertyDescriptor(x, 'p4'),
+    { configurable: false, enumerable: false, writable: true, value: Symbol.for('p4') },
+  );
 
   t.throws(
     () => { new Bar(); },
     {
       instanceOf: PropertyConfigurationError,
-      message: 'Property `p2\' cannot be configured using attributes `{ configurable: true, enumerable: true, writable: true }\'',
+      message: 'Property `p2\' cannot be configured using attributes `{ configurable: true, enumerable: false, writable: false }\'',
       name: PropertyConfigurationError.name,
     },
   );

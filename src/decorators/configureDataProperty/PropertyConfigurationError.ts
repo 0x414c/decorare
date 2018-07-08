@@ -4,8 +4,11 @@ import {
   IDataPropertyAttributesMetadata,
 } from './configureDataProperty';
 
-const _formatErrorMessage = (propertyAttributesMetadata: IDataPropertyAttributesMetadata): string =>
-    `Property \`${propertyAttributesMetadata.key}' cannot be configured using attributes \`${_stringify(propertyAttributesMetadata.attributes)}'`;
+const _formatErrorMessage = (propertyAttributesMetadata: IDataPropertyAttributesMetadata): string => {
+    const { key, attributes }: IDataPropertyAttributesMetadata = propertyAttributesMetadata;
+
+    return `Property \`${key.toString()}' cannot be configured using attributes \`${_stringify(attributes)}'`;
+  };
 
 export class PropertyConfigurationError extends Error {
   public readonly [Symbol.toStringTag]: string = PropertyConfigurationError.name;
@@ -28,4 +31,4 @@ export class PropertyConfigurationError extends Error {
       this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false },
     );
   };
-}
+};

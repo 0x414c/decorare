@@ -43,7 +43,7 @@ export const _join = <TElement>(
   };
 
 export const _formatEntry = (target: object, propertyKey: PropertyKey) =>
-    `${propertyKey}: ${Reflect.get(target, propertyKey)}`;
+    `${propertyKey.toString()}: ${Reflect.get(target, propertyKey)}`;
 
 export const _stringify = (target: object): string =>
     _join(Reflect.ownKeys(target), (propertyKey: PropertyKey) => _formatEntry(target, propertyKey), ', ', '{ ', ' }');
