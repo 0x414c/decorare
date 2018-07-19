@@ -1,11 +1,15 @@
 import 'reflect-metadata';
 
-import { OptionalT } from 'type-ops';
+import {
+  DictT,
+  OptionalT,
+} from 'type-ops';
 
 import {
-  ClassDecoratorT,
-  ConstructorT,
+  ClassDecorator,
+  Constructor,
   PropertyDecorator,
+  PropertyKey,
 } from '../common';
 
 import { _METADATA_KEY } from './_support/config';
@@ -19,14 +23,14 @@ export interface IDataPropertyAttributesMetadata {
   attributes: IDataPropertyAttributes;
 }
 
-export const configureDataProperties: ClassDecoratorT<{ }> =
-  <TConstructor extends ConstructorT<{ }>>(constructor: TConstructor): TConstructor => {
+export const configureDataProperties: ClassDecorator<{ }> =
+  <TConstructor extends Constructor<{ }>>(constructor: TConstructor): TConstructor => {
     const { name, prototype }: { name: string; prototype: object; } = constructor;
     if (!Reflect.hasOwnMetadata(_METADATA_KEY, prototype)) {
       return constructor;
     }
 
-    const extended: { [propertyKey: string]: TConstructor; } = {
+    const extended: DictT<TConstructor> = {
         [name]: class extends constructor {
           public constructor(...args: any[]) {
             super(...args);

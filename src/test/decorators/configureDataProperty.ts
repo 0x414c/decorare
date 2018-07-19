@@ -7,7 +7,7 @@ import {
 } from '../..';
 
 @configureDataProperties
-class Foo {
+class C1 {
   @configureDataProperty({ configurable: true, enumerable: true, writable: false })
   public readonly p1 = 'p1';
 
@@ -22,7 +22,7 @@ class Foo {
 };
 
 @configureDataProperties
-class Bar extends Foo {
+class C2 extends C1 {
   @configureDataProperty({ configurable: true, enumerable: false, writable: false })
   public p2 = '1';
 
@@ -35,7 +35,7 @@ class Bar extends Foo {
 };
 
 @configureDataProperties
-class Baz extends Foo {
+class C3 extends C1 {
   @configureDataProperty({ configurable: false, enumerable: false, writable: true })
   public p3 = '1';
 
@@ -45,9 +45,9 @@ class Baz extends Foo {
 };
 
 test('configureDataProperty', t => {
-  const x = new Foo();
+  const x = new C1();
   (x as any)._p3 = '_p3';
-  t.is(Foo.name, 'Foo');
+  t.is(C1.name, 'C1');
   t.deepEqual(
     Object.getOwnPropertyDescriptor(x, 'p1'),
     { configurable: true, enumerable: true, writable: false, value: 'p1' },
@@ -66,7 +66,7 @@ test('configureDataProperty', t => {
   );
 
   t.throws(
-    () => { new Bar(); },
+    () => { new C2(); },
     {
       instanceOf: PropertyConfigurationError,
       message: 'Property `p2\' cannot be configured using attributes `{ configurable: true, enumerable: false, writable: false }\'',
@@ -74,7 +74,7 @@ test('configureDataProperty', t => {
     },
   );
 
-  const y = new Baz();
+  const y = new C3();
   t.deepEqual(
     Object.getOwnPropertyDescriptor(y, 'p3'),
     { configurable: false, enumerable: false, writable: true, value: '1' },

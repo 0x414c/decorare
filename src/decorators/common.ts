@@ -1,8 +1,13 @@
+import { OptionalT } from 'type-ops';
+
 export type PropertyKey = string | symbol;
 
-export type ConstructorT<Type> = new(...args: any[]) => Type;
+export type Constructor<T> = new(...args: any[]) => T;
 
-export type ClassDecoratorT<Type> =
-  <Constructor extends ConstructorT<Type>>(constructor: Constructor) => Constructor | never;
+export type ClassDecorator<T> =
+  <TConstructor extends Constructor<T>>(constructor: TConstructor) => TConstructor | never;
 
 export type PropertyDecorator = (target: object, propertyKey: PropertyKey) => void;
+
+export type MethodDecorator =
+  (target: object, propertyKey: PropertyKey, descriptor: PropertyDescriptor) => PropertyDescriptor | void;
