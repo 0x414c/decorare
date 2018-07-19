@@ -1,6 +1,6 @@
 {
   "name": "ts-decorators",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Decorators for TypeScript",
   "author": "Alexey Gorishny",
   "license": "MIT",
@@ -32,11 +32,11 @@
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
-    "ava": "^1.0.0-beta.5.1",
-    "shx": "^0.2.2",
-    "tslint": "^5.10.0",
-    "type-ops": "^1.0.0",
+    "ava": "^1.0.0-beta.6",
+    "shx": "^0.3.2",
+    "tslint": "^5.11.0",
+    "type-ops": "^1.20.0",
     "typedoc": "^0.11.1",
-    "typescript": "^2.9.1"
+    "typescript": "^2.9.2"
   }
 }
