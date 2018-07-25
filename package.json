@@ -28,11 +28,9 @@
     ],
     "verbose": true
   },
-  "dependencies": {
-    "reflect-metadata": "^0.1.12"
-  },
   "devDependencies": {
     "ava": "^1.0.0-beta.6",
+    "reflect-metadata": "^0.1.12",
     "shx": "^0.3.2",
     "tslint": "^5.11.0",
     "type-ops": "^1.20.0",
