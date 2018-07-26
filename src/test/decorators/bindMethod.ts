@@ -9,7 +9,7 @@ import {
 
 @bindMethods
 class C1 {
-  private _p1: string = 'p1';
+  private _p1 = 'p1';
 
   @bindMethod()
   public m1(): string {
@@ -18,7 +18,7 @@ class C1 {
 };
 
 class C2 {
-  private _p1: string = 'p1';
+  private _p1 = 'p1';
 
   public m1(): string {
     return this._p1;

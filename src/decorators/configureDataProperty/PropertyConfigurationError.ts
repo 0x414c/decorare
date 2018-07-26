@@ -1,34 +1,30 @@
-import { _stringify } from './_support/utils';
+import { _stringifyObject } from './_support/utils';
 
 import {
-  IDataPropertyAttributesMetadata,
+  _IDataPropertyAttributesMetadata,
 } from './configureDataProperty';
 
-const _formatErrorMessage = (propertyAttributesMetadata: IDataPropertyAttributesMetadata): string => {
-    const { key, attributes }: IDataPropertyAttributesMetadata = propertyAttributesMetadata;
+const _formatErrorMessage = (dataPropertyAttributesMetadata: _IDataPropertyAttributesMetadata): string => {
+      const { propertyAttributes, propertyName }: _IDataPropertyAttributesMetadata = dataPropertyAttributesMetadata;
 
-    return `Property \`${key.toString()}' cannot be configured using attributes \`${_stringify(attributes)}'`;
-  };
+      return `Property \`${propertyName.toString()}' cannot be configured using attributes \`${_stringifyObject(propertyAttributes)}'`;
+    };
 
 export class PropertyConfigurationError extends Error {
   public readonly [Symbol.toStringTag]: string = PropertyConfigurationError.name;
 
   public constructor(
-    propertyAttributesMetadata: IDataPropertyAttributesMetadata, callSite: Function = PropertyConfigurationError,
+      propertyAttributesMetadata: _IDataPropertyAttributesMetadata, callSite: Function = PropertyConfigurationError,
   ) {
     super(_formatErrorMessage(propertyAttributesMetadata));
 
     this.name = PropertyConfigurationError.name;
-    Reflect.defineProperty(
-      this, 'name', { configurable: true, writable: true, enumerable: false },
-    );
+    Reflect.defineProperty(this, 'name', { configurable: true, writable: true, enumerable: false });
 
     if (Error.captureStackTrace !== undefined) {
       Error.captureStackTrace(this, callSite);
     }
 
-    Reflect.defineProperty(
-      this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false },
-    );
+    Reflect.defineProperty(this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false });
   };
 };

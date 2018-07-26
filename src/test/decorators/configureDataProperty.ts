@@ -47,23 +47,23 @@ class C3 extends C1 {
 };
 
 test('configureDataProperty', t => {
-  const x = new C1();
-  (x as any)._p3 = '_p3';
+  const c1 = new C1();
+  (c1 as any)._p3 = '_p3';
   t.is(C1.name, 'C1');
   t.deepEqual(
-    Object.getOwnPropertyDescriptor(x, 'p1'),
+    Object.getOwnPropertyDescriptor(c1, 'p1'),
     { configurable: true, enumerable: true, writable: false, value: 'p1' },
   );
   t.deepEqual(
-    Object.getOwnPropertyDescriptor(x, 'p2'),
+    Object.getOwnPropertyDescriptor(c1, 'p2'),
     { configurable: false, enumerable: true, writable: true, value: 'p2' },
   );
   t.deepEqual(
-    Object.getOwnPropertyDescriptor(x, '_p3'),
+    Object.getOwnPropertyDescriptor(c1, '_p3'),
     { configurable: true, enumerable: false, writable: true, value: '_p3' },
   );
   t.deepEqual(
-    Object.getOwnPropertyDescriptor(x, 'p4'),
+    Object.getOwnPropertyDescriptor(c1, 'p4'),
     { configurable: false, enumerable: false, writable: true, value: Symbol.for('p4') },
   );
 
@@ -76,9 +76,9 @@ test('configureDataProperty', t => {
     },
   );
 
-  const y = new C3();
+  const c3 = new C3();
   t.deepEqual(
-    Object.getOwnPropertyDescriptor(y, 'p3'),
+    Object.getOwnPropertyDescriptor(c3, 'p3'),
     { configurable: false, enumerable: false, writable: true, value: '1' },
   );
 });

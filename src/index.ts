@@ -1,9 +1,10 @@
 export {
-  ClassDecorator,
-  Constructor,
-  MethodDecorator,
-  PropertyDecorator,
-  PropertyKey,
+  AnyFunctionT,
+  ClassDecoratorT,
+  ConstructorT,
+  MethodDecoratorT,
+  PropertyDecoratorT,
+  PropertyKeyT,
 } from './decorators/common';
 
 export {
@@ -18,6 +19,5 @@ export { PropertyConfigurationError } from './decorators/configureDataProperty/P
 export {
   bindMethod,
   bindMethods,
-  BindMethodDecoratorFactory,
-  IMethodMetadata,
+  BindMethodDecoratorFactoryT,
 } from './decorators/bindMethod/bindMethod';

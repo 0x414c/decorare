@@ -1,64 +1,57 @@
-import {
-  DictT,
-  OptionalT,
-} from 'type-ops';
+import { OptionalT } from 'type-ops';
 
 import {
-  ClassDecorator,
-  Constructor,
-  MethodDecorator,
-  PropertyKey,
+  _addMetadata,
+  _extendConstructor,
+  _getMetadata,
+  _hasMetadata,
+  AnyFunctionT,
+  ClassDecoratorT,
+  ConstructorT,
+  MethodDecoratorT,
+  PropertyKeyT,
 } from '../common';
 
 import { _METADATA_KEY } from './_support/config';
 
-export interface IMethodMetadata {
-  key: PropertyKey;
-  bound: boolean;
+import { _bindMethod } from './_support/utils';
+
+export interface _IMethodMetadata {
+  methodName: PropertyKeyT;
 }
 
-export const bindMethods: ClassDecorator<{ }> =
-  <TConstructor extends Constructor<{ }>>(constructor: TConstructor): TConstructor => {
-    const { name, prototype }: { name: string; prototype: object; } = constructor;
-    if (!Reflect.hasOwnMetadata(_METADATA_KEY, prototype)) {
-      return constructor;
-    }
+export const bindMethods: ClassDecoratorT<object> =
+  <TConstructor extends ConstructorT<object>>(constructor: TConstructor): TConstructor => {
+      if (!_hasMetadata(constructor.prototype, _METADATA_KEY)) {
+        return constructor;
+      }
 
-    const extended: DictT<TConstructor> = {
-        [name]: class extends constructor {
-          public constructor(...args: any[]) {
-            super(...args);
+      return _extendConstructor(constructor, (instance: object) => {
+          const existingMethodMetadata: _IMethodMetadata[] =
+            _getMetadata<_IMethodMetadata>(constructor.prototype, _METADATA_KEY)!;
+          for (const methodMetadata of existingMethodMetadata) {
+            _bindMethod(constructor.prototype, instance, methodMetadata);
+          }
+        });
+    };
 
-            const metadata: IMethodMetadata[] = Reflect.getOwnMetadata(_METADATA_KEY, prototype);
-            for (const methodMetadata of metadata) {
-              if (methodMetadata.bound && ((this as any)[methodMetadata.key] !== undefined)) {
-                (this as any)[methodMetadata.key] = (this as any)[methodMetadata.key].bind(this);
-              }
-            }
-          };
-        },
-      };
+export type BindMethodDecoratorFactoryT<TMethod extends AnyFunctionT> = () => MethodDecoratorT<TMethod>;
 
-    return extended[name];
-  };
+export const bindMethod: BindMethodDecoratorFactoryT<AnyFunctionT> =
+  <TMethod extends AnyFunctionT>(): MethodDecoratorT<TMethod> => {
+      return (
+          prototypeOrConstructor: object, propertyKey: PropertyKeyT,
+          propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
+        ): void => {
+          if (propertyDescriptor === undefined) {
+            return;
+          }
 
-export type BindMethodDecoratorFactory = () => MethodDecorator;
+          if (typeof prototypeOrConstructor === 'function') {
+            return;
+          }
 
-export const bindMethod: BindMethodDecoratorFactory = (): MethodDecorator => {
-    const decorator: MethodDecorator = (
-        target: object, propertyKey: PropertyKey, descriptor: OptionalT<TypedPropertyDescriptor<Function>>,
-      ): TypedPropertyDescriptor<Function> | void => {
-        const newMethodMetadata: IMethodMetadata = {
-            key: propertyKey,
-            bound: true,
-          };
-        const oldMethodMetadata: OptionalT<IMethodMetadata[]> =
-            Reflect.getOwnMetadata(_METADATA_KEY, target);
-        const newMetadata: IMethodMetadata[] = (oldMethodMetadata !== undefined)
-            ? [...oldMethodMetadata, newMethodMetadata]
-            : [newMethodMetadata];
-        Reflect.defineMetadata(_METADATA_KEY, newMetadata, target);
-      };
-
-    return decorator;
-  };
+          const newMetadata: _IMethodMetadata = { methodName: propertyKey };
+          _addMetadata(prototypeOrConstructor, _METADATA_KEY, newMetadata);
+        };
+    };
