@@ -71,7 +71,7 @@ test('configureDataProperty', t => {
     () => { new C2(); },
     {
       instanceOf: PropertyConfigurationError,
-      message: 'Property `p2\' cannot be configured using attributes `{ configurable: true, enumerable: false, writable: false }\'',
+      message: 'Property `p2\' cannot be configured using descriptor `{ configurable: true, enumerable: false, writable: false }\'',
       name: PropertyConfigurationError.name,
     },
   );

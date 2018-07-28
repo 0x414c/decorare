@@ -1,9 +1,9 @@
 import {
-  DictT,
-  OptionalT,
-} from 'type-ops';
-
-import {
+  _addMetadata,
+  _extendConstructor,
+  _getMetadata,
+  _hasMetadata,
+  AnyFunctionT,
   ClassDecoratorT,
   ConstructorT,
   PropertyDecoratorT,
@@ -23,43 +23,37 @@ export interface _IDataPropertyAttributesMetadata {
 
 export const configureDataProperties: ClassDecoratorT<object> =
   <TConstructor extends ConstructorT<object>>(constructor: TConstructor): TConstructor => {
-      const { name, prototype }: { name: string; prototype: object; } = constructor;
-      if (!Reflect.hasOwnMetadata(_METADATA_KEY, prototype)) {
+      if (!_hasMetadata(constructor.prototype, _METADATA_KEY)) {
         return constructor;
       }
 
-      const extended: DictT<TConstructor> = {
-          [name]: class extends constructor {
-            public constructor(...args: any[]) {
-              super(...args);
-
-              const existingMethodMetadata: _IDataPropertyAttributesMetadata[] =
-                Reflect.getOwnMetadata(_METADATA_KEY, prototype);
-              for (const propertyAttributesMetadata of existingMethodMetadata) {
-                _setDataPropertyAttributes(this, propertyAttributesMetadata);
-              }
-            };
+      return _extendConstructor(
+          constructor,
+          (instance: object): void => {
+            const existingDataPropertyAttributesMetadata: _IDataPropertyAttributesMetadata[] =
+              _getMetadata<_IDataPropertyAttributesMetadata>(constructor.prototype, _METADATA_KEY)!;
+            for (const dataPropertyAttributesMetadata of existingDataPropertyAttributesMetadata) {
+              _setDataPropertyAttributes(instance, dataPropertyAttributesMetadata);
+            }
           },
-        };
-
-      return extended[name];
+        );
     };
 
 export type ConfigureDataPropertyDecoratorFactory = (attributes: IDataPropertyAttributes) => PropertyDecoratorT;
 
 export const configureDataProperty: ConfigureDataPropertyDecoratorFactory =
   (attributes: IDataPropertyAttributes): PropertyDecoratorT => {
-      const configureDataPropertyDecorator: PropertyDecoratorT = (target: object, propertyKey: PropertyKeyT): void => {
-          const newPropertyAttributesMetadata: _IDataPropertyAttributesMetadata = {
-              propertyAttributes: attributes, propertyName: propertyKey,
-            };
-          const oldPropertyAttributesMetadata: OptionalT<_IDataPropertyAttributesMetadata[]> =
-            Reflect.getOwnMetadata(_METADATA_KEY, target);
-          const newMetadata: _IDataPropertyAttributesMetadata[] = (oldPropertyAttributesMetadata !== undefined)
-              ? [...oldPropertyAttributesMetadata, newPropertyAttributesMetadata]
-              : [newPropertyAttributesMetadata];
-          Reflect.defineMetadata(_METADATA_KEY, newMetadata, target);
-      };
+      const configureDataPropertyDecorator: PropertyDecoratorT =
+        (prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT): void => {
+            if (typeof prototypeOrConstructor === 'function') {
+              return;
+            }
+
+            const newDataPropertyAttributesMetadata: _IDataPropertyAttributesMetadata = {
+                propertyAttributes: attributes, propertyName: propertyKey,
+              };
+            _addMetadata(prototypeOrConstructor, _METADATA_KEY, newDataPropertyAttributesMetadata);
+          };
 
       return configureDataPropertyDecorator;
     };

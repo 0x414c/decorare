@@ -26,32 +26,37 @@ export const bindMethods: ClassDecoratorT<object> =
         return constructor;
       }
 
-      return _extendConstructor(constructor, (instance: object) => {
-          const existingMethodMetadata: _IMethodMetadata[] =
-            _getMetadata<_IMethodMetadata>(constructor.prototype, _METADATA_KEY)!;
-          for (const methodMetadata of existingMethodMetadata) {
-            _bindMethod(constructor.prototype, instance, methodMetadata);
-          }
-        });
+      return _extendConstructor(
+          constructor,
+          (instance: object): void => {
+            const existingMethodMetadata: _IMethodMetadata[] =
+              _getMetadata<_IMethodMetadata>(constructor.prototype, _METADATA_KEY)!;
+            for (const methodMetadata of existingMethodMetadata) {
+              _bindMethod(constructor.prototype, instance, methodMetadata);
+            }
+          },
+        );
     };
 
 export type BindMethodDecoratorFactoryT<TMethod extends AnyFunctionT> = () => MethodDecoratorT<TMethod>;
 
 export const bindMethod: BindMethodDecoratorFactoryT<AnyFunctionT> =
   <TMethod extends AnyFunctionT>(): MethodDecoratorT<TMethod> => {
-      return (
-          prototypeOrConstructor: object, propertyKey: PropertyKeyT,
+      const bindMethodDecorator = (
+          prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT,
           propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
         ): void => {
-          if (propertyDescriptor === undefined) {
-            return;
-          }
+            if (propertyDescriptor === undefined) {
+              return;
+            }
 
-          if (typeof prototypeOrConstructor === 'function') {
-            return;
-          }
+            if (typeof prototypeOrConstructor === 'function') {
+              return;
+            }
 
-          const newMetadata: _IMethodMetadata = { methodName: propertyKey };
-          _addMetadata(prototypeOrConstructor, _METADATA_KEY, newMetadata);
-        };
+            const newMethodMetadata: _IMethodMetadata = { methodName: propertyKey };
+            _addMetadata(prototypeOrConstructor, _METADATA_KEY, newMethodMetadata);
+          };
+
+      return bindMethodDecorator;
     };

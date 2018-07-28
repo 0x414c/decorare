@@ -14,7 +14,7 @@ export {
   IDataPropertyAttributes,
 } from './decorators/configureDataProperty/configureDataProperty';
 
-export { PropertyConfigurationError } from './decorators/configureDataProperty/PropertyConfigurationError';
+export { PropertyConfigurationError } from './decorators/support/PropertyConfigurationError';
 
 export {
   bindMethod,

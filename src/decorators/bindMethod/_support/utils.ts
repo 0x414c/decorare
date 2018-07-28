@@ -1,6 +1,11 @@
 import { OptionalT } from 'type-ops';
 
-import { _IMethodMetadata } from '../bindMethod';
+import { PropertyConfigurationError } from '../../support/PropertyConfigurationError';
+
+import {
+  bindMethods,
+  _IMethodMetadata,
+} from '../bindMethod';
 
 export const _bindMethod = (prototype: object, instance: object, methodMetadata: _IMethodMetadata): void | never => {
       const existingPropertyDescriptor: OptionalT<PropertyDescriptor> =
@@ -14,6 +19,8 @@ export const _bindMethod = (prototype: object, instance: object, methodMetadata:
             configurable, enumerable, writable,
             value: value.bind(instance),
           };
-        Reflect.defineProperty(instance, methodMetadata.methodName, updatedPropertyDescriptor);
+        if (!Reflect.defineProperty(instance, methodMetadata.methodName, updatedPropertyDescriptor)) {
+          throw new PropertyConfigurationError(methodMetadata.methodName, updatedPropertyDescriptor, bindMethods);
+        }
       }
     };

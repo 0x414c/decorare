@@ -9,16 +9,15 @@ export type PropertyKeyT = string | symbol;
 
 export type ConstructorT<TInstance> = new(...args: any[]) => TInstance;
 
-export type ClassDecoratorT<TInstance> = <TConstructor extends ConstructorT<TInstance>>(constructor: TConstructor) =>
-    TConstructor | void;
+export type ClassDecoratorT<TInstance> =
+    <TConstructor extends ConstructorT<TInstance>>(constructor: TConstructor) => TConstructor | void;
 
-export type PropertyDecoratorT = (prototypeOrConstructor: object, propertyKey: PropertyKeyT) => void;
+export type PropertyDecoratorT = (prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT) => void;
 
 export type MethodDecoratorT<TMethod extends AnyFunctionT> = (
-    prototypeOrConstructor: object, propertyKey: PropertyKeyT,
+    prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT,
     propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
-  ) =>
-    TypedPropertyDescriptor<TMethod> | void;
+  ) => TypedPropertyDescriptor<TMethod> | void;
 
 export const _hasMetadata = (target: object, metadataKey: symbol): boolean =>
     Reflect.hasOwnMetadata(metadataKey, target);

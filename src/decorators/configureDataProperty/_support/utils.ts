@@ -1,26 +1,28 @@
 import { OptionalT } from 'type-ops';
 
+import { PropertyConfigurationError } from '../../support/PropertyConfigurationError';
+
 import {
   configureDataProperties,
   _IDataPropertyAttributesMetadata,
   IDataPropertyAttributes,
 } from '../configureDataProperty';
 
-import { PropertyConfigurationError } from '../PropertyConfigurationError';
-
 export const _setDataPropertyAttributes =
   (instance: object, dataPropertyAttributesMetadata: _IDataPropertyAttributesMetadata): void | never => {
-      const existingAttributes: OptionalT<PropertyDescriptor> =
+      const existingPropertyDescriptor: OptionalT<PropertyDescriptor> =
         Reflect.getOwnPropertyDescriptor(instance, dataPropertyAttributesMetadata.propertyName);
-      const { configurable, enumerable, writable }: IDataPropertyAttributes = (existingAttributes !== undefined)
-          ? existingAttributes
+      const { configurable, enumerable, writable }: IDataPropertyAttributes = (existingPropertyDescriptor !== undefined)
+          ? existingPropertyDescriptor
           : { };
-      const newAttributes: PropertyDescriptor = {
+      const updatedPropertyDescriptor: PropertyDescriptor = {
           configurable, enumerable, writable,
           ...dataPropertyAttributesMetadata.propertyAttributes,
         };
-      if (!Reflect.defineProperty(instance, dataPropertyAttributesMetadata.propertyName, newAttributes)) {
-        throw new PropertyConfigurationError(dataPropertyAttributesMetadata, configureDataProperties);
+      if (!Reflect.defineProperty(instance, dataPropertyAttributesMetadata.propertyName, updatedPropertyDescriptor)) {
+        throw new PropertyConfigurationError(
+            dataPropertyAttributesMetadata.propertyName, updatedPropertyDescriptor, configureDataProperties,
+          );
       }
     };
 
@@ -50,5 +52,5 @@ export const _formatEntry = (target: object, propertyKey: PropertyKey) =>
 export const _stringifyObject = (target: object): string =>
     _stringifyArray(
       Reflect.ownKeys(target), (propertyKey: PropertyKey) => _formatEntry(target, propertyKey),
-      { separator: ', ', start: '{ ', end: ' }'},
+      { separator: ', ', start: '{ ', end: ' }' },
     );
