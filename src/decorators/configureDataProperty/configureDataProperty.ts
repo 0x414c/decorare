@@ -1,11 +1,11 @@
+import { ConstructorT } from 'type-ops';
+
 import {
   _addMetadata,
   _extendConstructor,
   _getMetadata,
   _hasMetadata,
-  AnyFunctionT,
   ClassDecoratorT,
-  ConstructorT,
   PropertyDecoratorT,
   PropertyKeyT,
 } from '../common';
@@ -21,8 +21,8 @@ export interface _IDataPropertyAttributesMetadata {
   propertyName: PropertyKeyT;
 }
 
-export const configureDataProperties: ClassDecoratorT<object> =
-  <TConstructor extends ConstructorT<object>>(constructor: TConstructor): TConstructor => {
+export const configureDataProperties: ClassDecoratorT =
+  <TConstructor extends ConstructorT>(constructor: TConstructor): TConstructor => {
       if (!_hasMetadata(constructor.prototype, _METADATA_KEY)) {
         return constructor;
       }
@@ -44,7 +44,7 @@ export type ConfigureDataPropertyDecoratorFactory = (attributes: IDataPropertyAt
 export const configureDataProperty: ConfigureDataPropertyDecoratorFactory =
   (attributes: IDataPropertyAttributes): PropertyDecoratorT => {
       const configureDataPropertyDecorator: PropertyDecoratorT =
-        (prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT): void => {
+        (prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT): void => {
             if (typeof prototypeOrConstructor === 'function') {
               return;
             }

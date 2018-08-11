@@ -1,21 +1,19 @@
 import {
+  ConstructorT,
   DictT,
+  FunctionT,
   OptionalT,
 } from 'type-ops';
 
-export type AnyFunctionT = (...args: any[]) => any;
-
 export type PropertyKeyT = string | symbol;
 
-export type ConstructorT<TInstance> = new(...args: any[]) => TInstance;
+export type ClassDecoratorT<TInstance = object> =
+  <TConstructor extends ConstructorT<any[], TInstance>>(constructor: TConstructor) => TConstructor | void;
 
-export type ClassDecoratorT<TInstance> =
-    <TConstructor extends ConstructorT<TInstance>>(constructor: TConstructor) => TConstructor | void;
+export type PropertyDecoratorT = (prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT) => void;
 
-export type PropertyDecoratorT = (prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT) => void;
-
-export type MethodDecoratorT<TMethod extends AnyFunctionT> = (
-    prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT,
+export type MethodDecoratorT<TMethod extends FunctionT> = (
+    prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
     propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
   ) => TypedPropertyDescriptor<TMethod> | void;
 
@@ -36,7 +34,7 @@ export const _addMetadata = <TMetadata>(target: object, metadataKey: symbol, new
       _setMetadata(target, metadataKey, updatedMetadata);
     };
 
-export const _extendConstructor = <TConstructor extends ConstructorT<object>>(
+export const _extendConstructor = <TConstructor extends ConstructorT>(
     constructor: TConstructor, extension: (instance: object) => void,
   ): TConstructor => {
       const extendedConstructor: DictT<TConstructor> = {
@@ -45,7 +43,7 @@ export const _extendConstructor = <TConstructor extends ConstructorT<object>>(
               super(...args);
 
               extension(this);
-            };
+            }
           },
         };
 

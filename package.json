@@ -1,25 +1,36 @@
 {
-  "name": "ts-decorators",
-  "version": "1.2.1",
-  "description": "Decorators for TypeScript",
+  "name": "decorate.ts",
+  "version": "1.2.2",
+  "description": "TypeScript-first decorators",
   "author": "Alexey Gorishny",
   "license": "MIT",
   "private": true,
+  "repository": "github:0x414c/ts-decorators",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "ava": "^1.0.0-beta.6",
+    "reflect-metadata": "^0.1.12",
+    "shx": "^0.3.2",
+    "tslint": "^5.11.0",
+    "type-ops": "^1.21.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^3.0.1"
+  },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.json --pretty",
-    "tsc-watch": "npm run tsc -- --watch",
     "tslint": "tslint --config ./tslint.json --exclude ./node_modules/**/* --force --project ./tsconfig.json ./src/**/*.ts",
+    "tsc": "tsc --project ./tsconfig.json --pretty",
+    "tsc:watch": "npm run tsc -- --watch",
     "ava": "ava",
-    "ava-watch": "npm run ava -- --watch",
+    "ava:watch": "npm run ava -- --watch",
     "typedoc": "typedoc --out ./dist/doc --module CommonJS --target ES5 ./src",
-    "build": "npm run tsc",
-    "clean": "shx rm -rf ./dist",
     "lint": "npm run tslint",
+    "dist:build": "npm run tsc",
+    "dist:build:test": "npm run dist:build && npm run dist:test",
+    "dist:clean": "shx rm -rf ./dist",
+    "dist:test": "npm run ava",
     "doc": "npm run typedoc",
-    "test": "npm run tsc && npm run ava",
-    "all": "npm run tsc && npm run tslint && npm run ava && npm run typedoc"
+    "all": "npm run lint && npm run dist:build:test && npm run doc"
   },
   "ava": {
     "files": [
@@ -27,14 +38,5 @@
       "!**/_support/**/*"
     ],
     "verbose": true
-  },
-  "devDependencies": {
-    "ava": "^1.0.0-beta.6",
-    "reflect-metadata": "^0.1.12",
-    "shx": "^0.3.2",
-    "tslint": "^5.11.0",
-    "type-ops": "^1.20.2",
-    "typedoc": "^0.11.1",
-    "typescript": "^3.0.1"
   }
 }

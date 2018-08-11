@@ -1,7 +1,5 @@
 export {
-  AnyFunctionT,
   ClassDecoratorT,
-  ConstructorT,
   MethodDecoratorT,
   PropertyDecoratorT,
   PropertyKeyT,

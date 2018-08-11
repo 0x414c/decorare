@@ -1,13 +1,15 @@
-import { OptionalT } from 'type-ops';
+import {
+  ConstructorT,
+  FunctionT,
+  OptionalT,
+} from 'type-ops';
 
 import {
   _addMetadata,
   _extendConstructor,
   _getMetadata,
   _hasMetadata,
-  AnyFunctionT,
   ClassDecoratorT,
-  ConstructorT,
   MethodDecoratorT,
   PropertyKeyT,
 } from '../common';
@@ -20,8 +22,8 @@ export interface _IMethodMetadata {
   methodName: PropertyKeyT;
 }
 
-export const bindMethods: ClassDecoratorT<object> =
-  <TConstructor extends ConstructorT<object>>(constructor: TConstructor): TConstructor => {
+export const bindMethods: ClassDecoratorT =
+  <TConstructor extends ConstructorT>(constructor: TConstructor): TConstructor => {
       if (!_hasMetadata(constructor.prototype, _METADATA_KEY)) {
         return constructor;
       }
@@ -38,12 +40,12 @@ export const bindMethods: ClassDecoratorT<object> =
         );
     };
 
-export type BindMethodDecoratorFactoryT<TMethod extends AnyFunctionT> = () => MethodDecoratorT<TMethod>;
+export type BindMethodDecoratorFactoryT<TMethod extends FunctionT> = () => MethodDecoratorT<TMethod>;
 
-export const bindMethod: BindMethodDecoratorFactoryT<AnyFunctionT> =
-  <TMethod extends AnyFunctionT>(): MethodDecoratorT<TMethod> => {
+export const bindMethod: BindMethodDecoratorFactoryT<FunctionT> =
+  <TMethod extends FunctionT>(): MethodDecoratorT<TMethod> => {
       const bindMethodDecorator = (
-          prototypeOrConstructor: object | AnyFunctionT, propertyKey: PropertyKeyT,
+          prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
           propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
         ): void => {
             if (propertyDescriptor === undefined) {
