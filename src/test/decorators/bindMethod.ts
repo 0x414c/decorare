@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { test } from 'ava';
+import test from 'ava';
 
 import { FunctionT } from 'type-ops';
 
