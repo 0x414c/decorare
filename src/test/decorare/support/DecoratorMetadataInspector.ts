@@ -2,10 +2,10 @@ import 'reflect-metadata';
 
 import test from 'ava';
 
-import { _DecoratorMetadataInspector } from '../../decorare/_support/_DecoratorMetadataInspector';
+import { _DecoratorMetadataInspector } from '../../../decorare/_support/_DecoratorMetadataInspector';
 
 
-test('_DecoratorMetadataInspector', t => {
+test('_support/_DecoratorMetadataInspector', t => {
   const inspector = new _DecoratorMetadataInspector();
   const target = { };
   inspector

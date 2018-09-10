@@ -24,21 +24,22 @@ class C1 {
 
 @configureDataProperties
 class C2 extends C1 {
-  @configureDataProperty({ configurable: true, enumerable: false, writable: false })
-  public p2: symbol = Symbol.for('v21');
+  @configureDataProperty({ configurable: true, enumerable: true, writable: false })
+  public readonly p1: string = 'v11';
 }
 
 
 @configureDataProperties
 class C3 extends C1 {
-  @configureDataProperty({ configurable: false, enumerable: false, writable: false })
-  public p1: string = 'v11';
+  @configureDataProperty({ configurable: true, enumerable: false, writable: false })
+  public readonly p2: symbol = Symbol.for('v21');
 }
 
 
 test('configureDataProperty', t => {
-  const c1 = new C1();
   t.is(C1.name, 'C1');
+
+  const c1 = new C1();
   t.deepEqual(
     Reflect.getOwnPropertyDescriptor(c1, 'p1'),
     { configurable: true, enumerable: true, writable: true, value: 'v1' },
@@ -52,18 +53,18 @@ test('configureDataProperty', t => {
     { configurable: false, enumerable: false, writable: false, value: 'v3' },
   )
 
+  const c2 = new C2();
+  t.deepEqual(
+    Reflect.getOwnPropertyDescriptor(c2, 'p1'),
+    { configurable: true, enumerable: true, writable: false, value: 'v11' },
+  );
+
   t.throws(
-    () => { new C2(); },
+    () => { new C3(); },
     {
       instanceOf: PropertyConfigurationError,
       name: PropertyConfigurationError.name,
       message: 'Property `p2\' cannot be configured using descriptor `{ configurable: true, enumerable: false, writable: false, value: Symbol(v21) }\'',
     },
-  );
-
-  const c3 = new C3();
-  t.deepEqual(
-    Reflect.getOwnPropertyDescriptor(c3, 'p1'),
-    { configurable: false, enumerable: false, writable: false, value: 'v11' },
   );
 });

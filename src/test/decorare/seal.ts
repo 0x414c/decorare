@@ -16,6 +16,8 @@ class C1 {
 
 
 test('seal', t => {
+  t.is(C1.name, 'C1');
+
   const c1 = new C1();
 
   t.is(Object.isSealed(c1), true);

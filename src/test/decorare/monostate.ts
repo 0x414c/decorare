@@ -10,6 +10,8 @@ class C1 {
 
 
 test('monostate', t => {
+  t.is(C1.name, 'C1');
+
   const c1 = new C1();
   const c11 = new C1();
   t.is(c1, c11);

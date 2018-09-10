@@ -19,14 +19,14 @@ class C1 {
 test('configureAccessorProperty', t => {
   const c1 = new C1();
   t.is(c1.p1, 'v1');
-  const c1P1 = Reflect.getOwnPropertyDescriptor(C1.prototype, 'p1');
+  const p1 = Reflect.getOwnPropertyDescriptor(C1.prototype, 'p1');
   t.deepEqual(
-    c1P1,
-    { configurable: false, enumerable: true, get: c1P1!.get, set: undefined },
+    p1,
+    { configurable: false, enumerable: true, get: p1! /* HACK. */.get, set: undefined },
   );
-  const c1P2 = Reflect.getOwnPropertyDescriptor(C1, 'p2');
+  const p2 = Reflect.getOwnPropertyDescriptor(C1, 'p2');
   t.deepEqual(
-    c1P2,
-    { configurable: false, enumerable: true, get: c1P2!.get, set: undefined }
+    p2,
+    { configurable: false, enumerable: true, get: p2! /* HACK. */.get, set: undefined }
   );
 });

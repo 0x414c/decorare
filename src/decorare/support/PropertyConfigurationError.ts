@@ -51,7 +51,7 @@ export class PropertyConfigurationError extends Error {
     Reflect.defineProperty(this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false });
   }
 
-  public toJSON(propertyKey: string): PropertyConfigurationErrorJson {
+  public toJSON(propertyKey_: string): PropertyConfigurationErrorJson {
     return {
         name: this.name,
         message: this.message,

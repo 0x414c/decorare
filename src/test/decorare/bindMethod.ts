@@ -12,7 +12,7 @@ import {
 
 @bindMethods
 class C1 {
-  private _p1: string = 'v1';
+  private readonly _p1: string = 'v1';
 
   @bindMethod()
   public m1(): string {
@@ -22,7 +22,9 @@ class C1 {
 
 
 test('bindMethod', t => {
+  t.is(C1.name, 'C1');
+
   const c1 = new C1();
   t.is(c1.m1(), 'v1');
-  t.is(((f: FunctionT) => f())(c1.m1), 'v1');
+  t.is(((f: FunctionT<[ ], string>) => f())(c1.m1), 'v1');
 });

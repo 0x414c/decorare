@@ -1,7 +1,4 @@
-import {
-  _ownEntries,
-  _ownPropertyKeys,
-} from '../../_support/_reflect';
+import { _ownEntries } from '../../_support/_reflect';
 
 import { PropertyKeyT } from '../types';
 

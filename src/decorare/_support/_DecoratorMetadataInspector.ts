@@ -4,14 +4,19 @@ import {
 } from 'type-ops';
 
 import { PropertyKeyT } from '../support/types';
+import { TargetError } from '../support/TargetError';
 
 import {
-  _hasOwnMetadata,
-  _getOwnMetadata,
   _defineMetadata,
+  _getOwnMetadata,
+  _hasOwnMetadata,
 } from './_metadata';
 
-import { _ownPropertyKeys } from './_reflect';
+import {
+  _ownEntries,
+  _ownKeys,
+  _ownValues,
+} from './_reflect';
 
 import { _METADATA_KEY } from './_support/_METADATA_KEY';
 
@@ -66,7 +71,7 @@ export class _DecoratorMetadataInspector {
 
   public attach(target: object, metadataKey: symbol = _METADATA_KEY): this | never {
     if (this._isAttached) {
-      throw new Error();
+      throw new TargetError('Already attached', this._target);
     }
 
     this._target = target;
@@ -79,7 +84,7 @@ export class _DecoratorMetadataInspector {
 
   public detach(): this | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (this._hasMetadata && this._isDirty) {
@@ -93,7 +98,7 @@ export class _DecoratorMetadataInspector {
 
   public getAllDecoratorMetadata<TMetadata extends object>(decoratorKey: PropertyKeyT): DictT<TMetadata> | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
@@ -101,24 +106,13 @@ export class _DecoratorMetadataInspector {
     }
 
     const result: DictT<TMetadata> = { };
-    for (const propertyKey of _ownPropertyKeys(this._metadataTree! /* HACK. */)) {
-      for (const decoratorKey2 of _ownPropertyKeys(Reflect.get(this._metadataTree!, propertyKey))) {
+    for (const [ propertyKey, propertyMetadata ] of _ownEntries(this._metadataTree! /* HACK. */)) {
+      for (const decoratorKey2 of _ownKeys(propertyMetadata)) {
         if (decoratorKey2 === decoratorKey) {
-          Reflect.set(result, propertyKey, Reflect.get(Reflect.get(this._metadataTree!, propertyKey), decoratorKey2));
+          Reflect.set(result, propertyKey, Reflect.get(propertyMetadata, decoratorKey2));
         }
       }
     }
-
-    // for (const propertyKey of _ownPropertyKeys(this._metadataTree! /* HACK. */)) {
-    //   for (const decoratorKey2 of _ownPropertyKeys(this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */])) {
-    //     if (decoratorKey2 === decoratorKey) {
-    //       result[propertyKey as string /* HACK. */] =
-    //         this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */][decoratorKey2 as string /* HACK. */] as TMetadata /* HACK. */;
-
-    //       break;
-    //     }
-    //   }
-    // }
 
     return result;
   }
@@ -127,7 +121,7 @@ export class _DecoratorMetadataInspector {
     propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT,
   ): OptionalT<TMetadata> | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
@@ -139,17 +133,11 @@ export class _DecoratorMetadataInspector {
     }
 
     return Reflect.get(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
-
-    // if (this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */] === undefined) {
-    //   return undefined;
-    // }
-
-    // return this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */][decoratorKey as string /* HACK. */] as TMetadata /* HACK. */;
   }
 
   public hasDecoratorMetadata(propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT): boolean | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
@@ -161,40 +149,27 @@ export class _DecoratorMetadataInspector {
     }
 
     return Reflect.has(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
-
-    // if (this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */] === undefined) {
-    //   return false;
-    // }
-
-    // return (
-    //         this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */][decoratorKey as string /* HACK. */]
-    //     !== undefined
-    //   );
   }
 
   public deleteAllDecoratorMetadata(decoratorKey: PropertyKeyT): this | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
       return this;
     }
 
-    for (const propertyKey of _ownPropertyKeys(this._metadataTree! /* HACK. */)) {
-      Reflect.deleteProperty(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
+    for (const propertyMetadata of _ownValues(this._metadataTree! /* HACK. */)) {
+      Reflect.deleteProperty(propertyMetadata, decoratorKey);
     }
-
-    // for (const propertyKey of _ownPropertyKeys(this._metadataTree! /* HACK. */)) {
-    //   delete this._metadataTree![propertyKey as string /* HACK. */][decoratorKey as string /* HACK. */];
-    // }
 
     return this;
   }
 
   public deleteDecoratorMetadata(propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT): this | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
@@ -207,12 +182,6 @@ export class _DecoratorMetadataInspector {
 
     Reflect.deleteProperty(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
 
-    // if (this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */] === undefined) {
-    //   return this;
-    // }
-
-    // delete this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */][decoratorKey as string /* HACK. */];
-
     return this;
   }
 
@@ -220,7 +189,7 @@ export class _DecoratorMetadataInspector {
     propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT, decoratorMetadata: TMetadata,
   ): this | never {
     if (!this._isAttached) {
-      throw new Error();
+      throw new TargetError('Not attached');
     }
 
     if (!this._hasMetadata) {
@@ -232,12 +201,6 @@ export class _DecoratorMetadataInspector {
     }
 
     Reflect.set(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey, decoratorMetadata);
-
-    // if (this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */] === undefined) {
-    //   this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */] = { };
-    // }
-
-    // this._metadataTree! /* HACK. */[propertyKey as string /* HACK. */][decoratorKey as string /* HACK. */] = decoratorMetadata;
 
     this._isDirty = true;
 

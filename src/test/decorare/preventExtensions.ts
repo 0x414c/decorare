@@ -8,6 +8,8 @@ class C1 { }
 
 
 test('preventExtensions', t => {
+  t.is(C1.name, 'C1');
+
   const c1 = new C1();
 
   t.is(Object.isExtensible(c1), false);

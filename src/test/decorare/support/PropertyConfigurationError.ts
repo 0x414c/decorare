@@ -1,9 +1,9 @@
 import test from 'ava';
 
-import { PropertyConfigurationError } from '../..';
+import { PropertyConfigurationError } from '../../..';
 
 
-test('PropertyConfigurationError', t => {
+test('support/PropertyConfigurationError', t => {
   const e1 = new PropertyConfigurationError('p1', { configurable: true });
   t.is(e1.name, 'PropertyConfigurationError');
   t.is(e1.message, 'Property `p1\' cannot be configured using descriptor `{ configurable: true }\'');

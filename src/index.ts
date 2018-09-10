@@ -1,12 +1,4 @@
 export {
-  AccessorDecoratorT,
-  ClassDecoratorT,
-  MethodDecoratorT,
-  PropertyDecoratorT,
-  PropertyKeyT,
-} from './decorare/support/types';
-
-export {
   bindMethod,
   bindMethods,
   BindMethodDecoratorFactoryT,
@@ -38,9 +30,19 @@ export { preventExtensions } from './decorare/preventExtensions/preventExtension
 
 export { seal } from './decorare/seal/seal';
 
+export {
+  AccessorDecoratorT,
+  ClassDecoratorT,
+  MethodDecoratorT,
+  PropertyDecoratorT,
+  PropertyKeyT,
+} from './decorare/support/types';
 export { ErrorJson } from './decorare/support/ErrorJson';
-
 export {
   PropertyConfigurationError,
   PropertyConfigurationErrorJson,
 } from './decorare/support/PropertyConfigurationError';
+export {
+  TargetError,
+  TargetErrorJson,
+} from './decorare/support/TargetError';
