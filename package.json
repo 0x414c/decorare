@@ -38,7 +38,7 @@
     "dist:clean": "shx rm -rf ./dist",
     "dist:test": "npm run ava",
     "doc": "npm run typedoc",
-    "package": "shx cp ./LICENSE.txt ./dist",
+    "package": "shx cp ./LICENSE.txt ./dist && shx cp ./README.md ./dist",
     "all": "npm run lint && npm run dist:build:test && npm run doc && npm run package"
   },
   "ava": {
