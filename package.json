@@ -1,6 +1,6 @@
 {
   "name": "decorare",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Decorāre -- TypeScript-first decorators",
   "keywords": [
     "typescript",
@@ -21,7 +21,7 @@
     "reflect-metadata": "^0.1.12",
     "shx": "^0.3.2",
     "tslint": "^5.11.0",
-    "type-ops": "^2.0.0",
+    "type-ops": "^3.0.1",
     "typedoc": "^0.12.0",
     "typescript": "^3.0.3"
   },

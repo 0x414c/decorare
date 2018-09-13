@@ -2,7 +2,7 @@
 
 # `decorare`
 
-Decorāre -- TypeScript-first decorators.
+*Decorāre* -- TypeScript-first decorators.
 
 ## Compatibility
 

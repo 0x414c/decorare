@@ -9,7 +9,7 @@ export type PropertyKeyT = string | symbol;
 
 
 export type ClassDecoratorT<TInstance = object> =
-  <TConstructor extends ConstructorT<any[], TInstance>>(constructor: TConstructor) => TConstructor | void;
+  <TConstructor extends ConstructorT<TInstance>>(constructor: TConstructor) => TConstructor | void;
 
 
 export type PropertyDecoratorT = (prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT) => void;
