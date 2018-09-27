@@ -19,8 +19,8 @@ class C1 {
     return { ...this._p2 };
   }
 
-  public set p2(p2: typeof P_2) {
-    this._p2 = p2;
+  public set p2(newP2: typeof P_2) {
+    this._p2 = newP2;
   }
 
   private _p2: typeof P_2 = P_2;

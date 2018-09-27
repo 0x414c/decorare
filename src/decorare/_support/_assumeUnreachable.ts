@@ -4,5 +4,5 @@ import { AssumptionError } from './AssumptionError';
 
 
 export const _assumeUnreachable = (_: never): never => {
-    throw new AssumptionError(_assumeUnreachable as FunctionT<never, never> /* HACK. */);
+    throw new AssumptionError(_assumeUnreachable as any as FunctionT /* HACK. */);
   };

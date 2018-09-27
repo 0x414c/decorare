@@ -42,8 +42,8 @@ export const memoize = <TValue>(): AccessorDecoratorT<TValue> => {
                     }
                   : undefined,
                 set: (set !== undefined)
-                  ? function (this: object, value: TValue): void {
-                      Reflect.apply(set, this, [ value ]);
+                  ? function (this: object, newValue: TValue): void {
+                      Reflect.apply(set, this, [ newValue ]);
                       if (valueIsCached) {
                         valueCache = undefined;
                         valueIsCached = false;
