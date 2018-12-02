@@ -8,20 +8,21 @@ import {
 export type PropertyKeyT = string | symbol;
 
 
-export type ClassDecoratorT<TInstance = object> =
-  <TConstructor extends ConstructorT<TInstance>>(constructor: TConstructor) => TConstructor | void;
+export type ClassDecoratorT<TInstance = object> = <TConstructor extends ConstructorT<TInstance>>(
+  constructor: TConstructor
+) => TConstructor | void;
 
 
 export type PropertyDecoratorT = (prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT) => void;
 
 
 export type AccessorDecoratorT<TValue> = (
-    prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
-    propertyDescriptor: OptionalT<TypedPropertyDescriptor<TValue>>,
-  ) => TypedPropertyDescriptor<TValue> | void;
+  prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
+  propertyDescriptor: OptionalT<TypedPropertyDescriptor<TValue>>,
+) => TypedPropertyDescriptor<TValue> | void;
 
 
 export type MethodDecoratorT<TMethod extends FunctionT> = (
-    prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
-    propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
-  ) => TypedPropertyDescriptor<TMethod> | void;
+  prototypeOrConstructor: object | ConstructorT, propertyKey: PropertyKeyT,
+  propertyDescriptor: OptionalT<TypedPropertyDescriptor<TMethod>>,
+) => TypedPropertyDescriptor<TMethod> | void;

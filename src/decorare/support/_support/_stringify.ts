@@ -14,39 +14,37 @@ export interface _IStringifyArrayOptions {
 }
 
 
-export const _stringifyArray =
-  <TElement>(
-    sequence: ReadonlyArray<TElement>, formatter: (element: TElement) => string,
-    { separator, start, end, padding }: _IStringifyArrayOptions = { separator: ',', start: '', end: '', padding: '' },
-  ): string => {
-      switch (sequence.length) {
-        case 0: {
-          return `${start}${padding}${end}`;
-        }
+export const _stringifyArray = <TElement>(
+  sequence: ReadonlyArray<TElement>, formatter: (element: TElement) => string,
+  { separator, start, end, padding }: _IStringifyArrayOptions = { separator: ',', start: '', end: '', padding: '' },
+): string => {
+  switch (sequence.length) {
+    case 0: {
+      return `${start}${padding}${end}`;
+    }
 
-        case 1: {
-          return `${start}${padding}${formatter(sequence[0])}${padding}${end}`;
-        }
+    case 1: {
+      return `${start}${padding}${formatter(sequence[0])}${padding}${end}`;
+    }
 
-        default: {
-          const [ first, ...rest ]: ReadonlyArray<TElement> = sequence;
-          const formatted: string = rest
-              .reduce<string>(
-                (result: string, element: TElement) => `${result}${separator}${padding}${formatter(element)}`,
-                formatter(first),
-              );
+    default: {
+      const [ first, ...rest ]: ReadonlyArray<TElement> = sequence;
+      const formatted: string = rest
+        .reduce<string>(
+          (result: string, element: TElement) => `${result}${separator}${padding}${formatter(element)}`,
+          formatter(first),
+        );
 
-          return `${start}${padding}${formatted}${padding}${end}`;
-        }
-      }
-    };
+      return `${start}${padding}${formatted}${padding}${end}`;
+    }
+  }
+};
 
 
 export const _formatObjectEntry = ([ propertyKey, propertyValue ]: [ PropertyKeyT, any ]): string =>
-    `${propertyKey.toString()}: ${propertyValue.toString()}`;
+  `${propertyKey.toString()}: ${propertyValue.toString()}`;
 
 
-export const _stringifyObject = (target: object): string =>
-    _stringifyArray(
-      _ownEntries(target), _ => _formatObjectEntry(_), { separator: ',', start: '{', end: '}', padding: ' ' },
-    );
+export const _stringifyObject = (target: object): string => _stringifyArray(
+  _ownEntries(target), _ => _formatObjectEntry(_), { separator: ',', start: '{', end: '}', padding: ' ' },
+);

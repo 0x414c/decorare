@@ -16,6 +16,7 @@ export class TargetError extends Error {
 
   public readonly [Symbol.toStringTag]: string = TargetError.name;
 
+
   public constructor(message: string, target?: object, caller: FunctionT | ConstructorT = TargetError) {
     super(message);
 
@@ -33,11 +34,12 @@ export class TargetError extends Error {
     Reflect.defineProperty(this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false });
   }
 
+
   public toJSON(propertyKey_: string): TargetErrorJson {
     return {
-        name: this.name,
-        message: this.message,
-        target: this.target,
-      };
+      name: this.name,
+      message: this.message,
+      target: this.target,
+    };
   }
 }

@@ -10,18 +10,20 @@ import {
 } from '../configureDataProperty';
 
 
-export const _setDataPropertyAttributes =
-  (instance: object, propertyKey: PropertyKeyT, dataPropertyAttributes: IDataPropertyAttributes): void | never => {
-      const existingPropertyDescriptor: OptionalT<PropertyDescriptor> =
-        Reflect.getOwnPropertyDescriptor(instance, propertyKey);
-      const { configurable, enumerable, writable, value }: PropertyDescriptor = (existingPropertyDescriptor !== undefined)
-          ? existingPropertyDescriptor
-          : { };
-      const updatedPropertyDescriptor: PropertyDescriptor = {
-          configurable, enumerable, writable, value,
-          ...dataPropertyAttributes,
-        };
-      if (!Reflect.defineProperty(instance, propertyKey, updatedPropertyDescriptor)) {
-        throw new PropertyConfigurationError(propertyKey, updatedPropertyDescriptor, configureDataProperties);
-      }
-    };
+export const _setDataPropertyAttributes = (
+  instance: object, propertyKey: PropertyKeyT, dataPropertyAttributes: IDataPropertyAttributes,
+): void | never => {
+  const existingPropertyDescriptor: OptionalT<PropertyDescriptor> = Reflect.getOwnPropertyDescriptor(
+    instance, propertyKey,
+  );
+  const { configurable, enumerable, writable, value }: PropertyDescriptor = (existingPropertyDescriptor !== undefined)
+    ? existingPropertyDescriptor
+    : { };
+  const updatedPropertyDescriptor: PropertyDescriptor = {
+    configurable, enumerable, writable, value,
+    ...dataPropertyAttributes,
+  };
+  if (!Reflect.defineProperty(instance, propertyKey, updatedPropertyDescriptor)) {
+    throw new PropertyConfigurationError(propertyKey, updatedPropertyDescriptor, configureDataProperties);
+  }
+};

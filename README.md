@@ -6,7 +6,7 @@
 
 ## Compatibility
 
-TypeScript `~2.9.0`, `~3.0.1`.
+TypeScript `~2.9.0`, `^3.0.1`.
 
 ## Install
 

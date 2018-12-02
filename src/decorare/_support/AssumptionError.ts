@@ -9,6 +9,7 @@ import { ErrorJson } from '../support/ErrorJson';
 export class AssumptionError extends Error {
   public readonly [Symbol.toStringTag]: string = AssumptionError.name;
 
+
   public constructor(caller: FunctionT | ConstructorT = AssumptionError) {
     super('Assumption failed');
 
@@ -23,10 +24,10 @@ export class AssumptionError extends Error {
     Reflect.defineProperty(this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false });
   }
 
-  public toJSON(propertyKey: string): ErrorJson {
+  public toJSON(propertyKey_: string): ErrorJson {
     return {
-        name: this.name,
-        message: this.message,
-      };
+      name: this.name,
+      message: this.message,
+    };
   }
 }

@@ -14,6 +14,7 @@ import {
 class C1 {
   private readonly _p1: string = 'v1';
 
+
   @bindMethod()
   public m1(): string {
     return this._p1;

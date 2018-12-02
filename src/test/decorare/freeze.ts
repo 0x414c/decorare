@@ -9,6 +9,7 @@ class C1 {
 
   public static p2: string = 'v2';
 
+
   public m1(): string {
     return 'r1';
   }

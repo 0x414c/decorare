@@ -11,7 +11,7 @@ import { ErrorJson } from './ErrorJson';
 
 
 const _formatErrorMessage = (propertyKey: PropertyKeyT, propertyDescriptor: PropertyDescriptor): string =>
-    `Property \`${propertyKey.toString()}' cannot be configured using descriptor \`${_stringifyObject(propertyDescriptor)}'`;
+  `Property \`${propertyKey.toString()}' cannot be configured using descriptor \`${_stringifyObject(propertyDescriptor)}'`;
 
 
 export interface PropertyConfigurationErrorJson extends ErrorJson {
@@ -27,6 +27,7 @@ export class PropertyConfigurationError extends Error {
   public readonly propertyDescriptor: PropertyDescriptor;
 
   public readonly [Symbol.toStringTag]: string = PropertyConfigurationError.name;
+
 
   public constructor(
     propertyKey: PropertyKeyT, propertyDescriptor: PropertyDescriptor,
@@ -51,12 +52,13 @@ export class PropertyConfigurationError extends Error {
     Reflect.defineProperty(this, Symbol.toStringTag, { configurable: true, enumerable: false, writable: false });
   }
 
+
   public toJSON(propertyKey_: string): PropertyConfigurationErrorJson {
     return {
-        name: this.name,
-        message: this.message,
-        propertyKey: this.propertyKey,
-        propertyDescriptor: this.propertyDescriptor,
-      };
+      name: this.name,
+      message: this.message,
+      propertyKey: this.propertyKey,
+      propertyDescriptor: this.propertyDescriptor,
+    };
   }
 }

@@ -39,12 +39,13 @@ export class _DecoratorMetadataInspector {
   private _isDirty: boolean = false;
 
   private get _isAttached(): boolean {
-    return (this._target !== undefined);
+    return this._target !== undefined;
   }
 
   private get _hasMetadata(): boolean {
-    return (this._metadataTree !== undefined);
+    return this._metadataTree !== undefined;
   }
+
 
   public constructor() {
     if (_DecoratorMetadataInspector[_INSTANCE_KEY] !== undefined) {
@@ -65,9 +66,11 @@ export class _DecoratorMetadataInspector {
     );
   }
 
+
   public static hasDecoratorMetadata(target: object, metadataKey: symbol = _METADATA_KEY): boolean {
     return _hasOwnMetadata(target, metadataKey);
   }
+
 
   public attach(target: object, metadataKey: symbol = _METADATA_KEY): this | never {
     if (this._isAttached) {
@@ -82,6 +85,7 @@ export class _DecoratorMetadataInspector {
     return this;
   }
 
+
   public detach(): this | never {
     if (!this._isAttached) {
       throw new TargetError('Not attached');
@@ -95,6 +99,7 @@ export class _DecoratorMetadataInspector {
 
     return this;
   }
+
 
   public getAllDecoratorMetadata<TMetadata extends object>(decoratorKey: PropertyKeyT): DictT<TMetadata> | never {
     if (!this._isAttached) {
@@ -117,6 +122,7 @@ export class _DecoratorMetadataInspector {
     return result;
   }
 
+
   public getDecoratorMetadata<TMetadata extends object>(
     propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT,
   ): OptionalT<TMetadata> | never {
@@ -135,6 +141,7 @@ export class _DecoratorMetadataInspector {
     return Reflect.get(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
   }
 
+
   public hasDecoratorMetadata(propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT): boolean | never {
     if (!this._isAttached) {
       throw new TargetError('Not attached');
@@ -151,6 +158,7 @@ export class _DecoratorMetadataInspector {
     return Reflect.has(Reflect.get(this._metadataTree! /* HACK. */, propertyKey), decoratorKey);
   }
 
+
   public deleteAllDecoratorMetadata(decoratorKey: PropertyKeyT): this | never {
     if (!this._isAttached) {
       throw new TargetError('Not attached');
@@ -166,6 +174,7 @@ export class _DecoratorMetadataInspector {
 
     return this;
   }
+
 
   public deleteDecoratorMetadata(propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT): this | never {
     if (!this._isAttached) {
@@ -184,6 +193,7 @@ export class _DecoratorMetadataInspector {
 
     return this;
   }
+
 
   public setDecoratorMetadata<TMetadata extends object>(
     propertyKey: PropertyKeyT, decoratorKey: PropertyKeyT, decoratorMetadata: TMetadata,
@@ -206,6 +216,7 @@ export class _DecoratorMetadataInspector {
 
     return this;
   }
+
 
   private _reset(): void {
     this._isDirty = false;
